@@ -75,13 +75,13 @@ class Backpropagation:
         for l in reversed(range(len(deltas) - 1)): # O loop é realizado na ordem reversa para propagar o erro da camada mais próxima a saída até a entrada
             delta_next = deltas[l + 1]
             w_next = self.weights[l + 1]
-            delta = np.dot(delta_next, w_next.T) * self.activation_derivative(activations[l + 1]) # Erro da camada atual: Somatorio(Ei+1 . wi) * f(z)
+            delta = np.dot(delta_next, w_next.T) * self.activation_derivative(activations[l + 1]) # Erro da camada atual: Somatorio(Ei+1 . wi) * f(a)
             deltas[l] = delta
 
         # Atualização dos pesos e bias
         for l in range(len(self.weights)): # loop para atualizar o peso de todas as camadas
             self.weights[l] += self.learning_rate * np.dot(activations[l].T, deltas[l]) # Atualiza os pesos da camada atual 
-            self.biases[l] += self.learning_rate * np.sum(deltas[l], axis=0, keepdims=True) # Atualiza o peso ddo bias atual
+            self.biases[l] += self.learning_rate * np.sum(deltas[l], axis=0, keepdims=True) # Atualiza o peso do bias atual
 
     # Treinamento da rede
     def fit(self, X, y):
@@ -97,31 +97,3 @@ class Backpropagation:
     def predict(self, X):
         activations, _ = self.forward(X)
         return activations[-1]
-
-# Dados de entrada (AND)
-X = np.array([
-    [0, 0],
-    [0, 1],
-    [1, 0],
-    [1, 1]
-])
-
-# Saída esperada
-y = np.array([
-    [0],
-    [1],
-    [1],
-    [0]
-])
-
-# Definindo a arquitetura: 
-# 2 neurônios na entrada → 4 na 1ª camada intermediaria → 3 na 2ª camada intermediaria → 1 na saída
-nn = Backpropagation(layer_sizes=[2, 4, 3, 3, 1], activation_function='tanh', learning_rate=0.2, epochs=10000)
-
-# Treinar a rede
-nn.fit(X, y)
-
-# Fazer previsões
-output = nn.predict(X)
-print("\nSaída após treinamento:")
-print(output)
