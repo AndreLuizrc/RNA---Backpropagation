@@ -71,17 +71,17 @@ class Backpropagation:
         error = y - activations[-1] # Calcula o erro da camada de saída: y_real - y_predito, para todas as amostras 
         deltas[-1] = error * self.activation_derivative(activations[-1]) # Guarda o erro da camada de saída
 
-        # Backpropagation para camadas ocultas
-        for l in reversed(range(len(deltas) - 1)): # O loop é realizado na ordem reversa para propagar o erro da camada mais próxima a saída até a entrada
+        # Backpropagation para camadas intermediarias
+        for l in reversed(range(len(deltas) - 1)): # O loop é realizado na ordem reversa para propagar o erro da camada mais próxima a saída até a entrada (retropropagação)
             delta_next = deltas[l + 1]
             w_next = self.weights[l + 1]
-            delta = np.dot(delta_next, w_next.T) * self.activation_derivative(activations[l + 1]) # Erro da camada atual: Somatorio(Ei+1 . wi) * f(a)
+            delta = np.dot(delta_next, w_next.T) * self.activation_derivative(activations[l + 1]) 
             deltas[l] = delta
 
         # Atualização dos pesos e bias
         for l in range(len(self.weights)): # loop para atualizar o peso de todas as camadas
-            self.weights[l] += self.learning_rate * np.dot(activations[l].T, deltas[l]) # Atualiza os pesos da camada atual 
-            self.biases[l] += self.learning_rate * np.sum(deltas[l], axis=0, keepdims=True) # Atualiza o peso do bias atual
+            self.weights[l] += self.learning_rate * np.dot(activations[l].T, deltas[l])  
+            self.biases[l] += self.learning_rate * np.sum(deltas[l], axis=0, keepdims=True)
 
     # Treinamento da rede
     def fit(self, X, y):
